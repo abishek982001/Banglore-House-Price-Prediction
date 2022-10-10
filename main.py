@@ -2,6 +2,7 @@ import pickle
 import streamlit as st
 import json
 import numpy as np
+from num2words import num2words
 
 
 def get_estimated_price(location, sqft, bhk, bath):
@@ -19,7 +20,7 @@ def get_estimated_price(location, sqft, bhk, bath):
     if loc_index >= 0:
         x[loc_index] = 1
 
-    return round(model.predict([x])[0], 3)
+    return round(model.predict([x])[0]*10**5, 3)
 
 
 st.title("Banglore House Price Prediction")
@@ -38,4 +39,5 @@ with open('banglore_home_prices_model.pickle', 'rb') as f:
 
 price = get_estimated_price(location, area, bhk, bath)
 st.subheader("Predicted Price")
-st.write(price)
+st.write(price, "\u20B9")
+st.write(num2words(round(price), lang="en_IN").capitalize())
